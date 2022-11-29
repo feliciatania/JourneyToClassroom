@@ -8,18 +8,18 @@ using Unity.Mathematics;
 
 public class MahasiswaMovement : MonoBehaviour
 {
-    public int curPosMhs;
+    int curPosMhs;
     public GameObject go_mhs;
-    //public Image MahasiswaImg;
-    //public Sprite[] MahasiswaSprites;
     private GameObject[] kotak;
     KotakUlarTangga KUT;
     bool gameover;
-    float xPos = 0.35f;
-    float yPos = 0;
+    float xPos = 0.5f;
+    float yPos = -0.1f;
+    float jumpHeight = -10f;
     int curPosDos;
     float x;
     float y;
+    float h;
     public GameObject go_dosen;
 
     private float tParam;
@@ -65,40 +65,31 @@ public class MahasiswaMovement : MonoBehaviour
 
     public void onStart()
     {
-        Debug.Log("masuk mhs");
-       
-        x = xPos;
-        x *= Screen.width / 1024f;
-        y = yPos;
-        y *= Screen.height / 576f;
+        gameover = false;
+        
         curPosMhs = 0;
-        go_mhs.transform.localScale = new Vector3(10, 10, 10);
+        go_mhs.transform.localScale = new Vector3(10, 10, 1);
         //curPosMhs = 4;
-        //go_mhs.transform.localScale = new Vector3(0.85f, 0.85f, 1);
+        //go_mhs.transform.localScale = new Vector3(8.5f, 8.5f, 1);
         //curPosMhs = 8;
-        //go_mhs.transform.localScale = new Vector3(0.75f, 0.75f, 1);
-        go_mhs.transform.position = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
-        //checkPositifOrNegatif();
+        //go_mhs.transform.localScale = new Vector3(7.5f, 7.5f, 1);
 
-    }
-    void onFlat()
-    {
-        //MahasiswaImg.sprite = MahasiswaSprites[0];
+        go_mhs.transform.position = new Vector2(kotak[curPosMhs].transform.position.x - 2.75f, kotak[curPosMhs].transform.position.y + yPos);
+
+        this.Wait(1.15f, () =>
+        {
+            StartCoroutine(JalanPintuMasuk());
+        });
+        
     }
     void onNormal()
     {
-        //MahasiswaImg.sprite = MahasiswaSprites[1];
-    }
-    void onHappy()
-    {
-        //MahasiswaImg.sprite = MahasiswaSprites[2];
+        go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
     }
     void onPanik()
     {
-        //MahasiswaImg.sprite = MahasiswaSprites[3];
+        go_mhs.GetComponent<Animator>().Play("MC_IdlePanic");
     }
-
-    
 
     void onMahasiswaMove(int n)
     {
@@ -137,32 +128,70 @@ public class MahasiswaMovement : MonoBehaviour
             curPosDos = go_dosen.GetComponent<DosenMovement>().getCurPosDosen();
             if (curPosDos == curPosMhs)
             {
-                //MahasiswaImg.sprite = MahasiswaSprites[3];
-                GameInstance.onDosenMarah?.Invoke(true);
-                this.Wait(1.5f, () =>
+                go_mhs.GetComponent<Animator>().Play("MC_IdlePanic");
+                go_dosen.GetComponent<Animator>().Play("PakGery_IdleKesal");
+                this.Wait(0.25f, () =>
                 {
-                    //MahasiswaImg.sprite = MahasiswaSprites[0];
-                    GameInstance.onDosenMarah?.Invoke(false);
-                    this.Wait(0.5f, () =>
+                    GameInstance.onDosenMarah?.Invoke(true);
+                    
+                    this.Wait(1.5f, () =>
                     {
-                        GameInstance.onGiliranDosen?.Invoke();
+                        go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
+                        go_dosen.GetComponent<Animator>().Play("PakGery_IdleNormal");
+                        GameInstance.onDosenMarah?.Invoke(false);
+                        this.Wait(0.5f, () =>
+                        {
+                            GameInstance.onGiliranDosen?.Invoke();
+                        });
                     });
                 });
+                
             }
             else
             {
                 this.Wait(0.25f, () =>
                 {
-                    //MahasiswaImg.sprite = MahasiswaSprites[0];
+                    go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
                     GameInstance.onGiliranDosen?.Invoke();
                 });
             }
         }
     }
 
+    IEnumerator JalanPintuMasuk()
+    {
+        Vector2 startPosMhs;
+        Vector2 EndPosMhs;
+        float percent;
+        float timeFactor;
+        float duration;
+
+        go_mhs.GetComponent<Animator>().Play("MC_Walk");
+
+        duration = 1.5f;
+        x = xPos;
+        y = yPos;
+
+        startPosMhs = go_mhs.transform.position;
+        percent = 0;
+        timeFactor = 1 / duration; 
+
+        while (percent < 1)
+        {
+            percent += Time.deltaTime * timeFactor;
+
+            EndPosMhs = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y); //ditambah dengan posisi tile target
+
+            go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
+                                                                                                               //time += Time.deltaTime;
+            yield return null;
+        }
+
+        go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
+    }
+
     IEnumerator JumpMahasiswa(int n)
     {
-        //MahasiswaImg.sprite = MahasiswaSprites[2];
         go_mhs.GetComponent<Animator>().Play("MC_IdleHappy");
         for (int i = 1; i <= n; i++)
         {
@@ -187,40 +216,42 @@ public class MahasiswaMovement : MonoBehaviour
             float duration;
 
             //LOMPAT
-            kotakRT = kotak[curPosMhs].GetComponent<RectTransform>();
             if (curPosMhs >= 1 && curPosMhs <= 3)
             {
-                x = - kotakRT.rect.width / 2;
+                x = - 0.75f;
                 y = yPos;
+                h = jumpHeight;
             }
             else if (curPosMhs >= 5 && curPosMhs <= 7)
             {
-                x = kotakRT.rect.width / 2;
+                x = 0.7f;
                 y = yPos - 0.1f;
+                h = jumpHeight / 2;
             }
             else if (curPosMhs >= 9)
             {
-                x = - kotakRT.rect.width / 2;
-                y = yPos - 0.025f;
+                x = - 0.45f;
+                y = yPos;
+                h = jumpHeight / 1.5f;
             }
             else if (curPosMhs == 4)
             {
                 x = -xPos + 0.05f;
                 y = yPos - 0.1f;
+                h = jumpHeight;
             }
             else if(curPosMhs == 8)
             {
                 x = xPos - 0.05f;
-                y = yPos - 0.025f;
+                y = yPos;
+                h = jumpHeight;
             }
-            x *= Screen.width / 1024f;
-            y *= Screen.height / 576f;
 
             Vector2 p0 = go_mhs.transform.position;
-            Vector2 p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, go_mhs.transform.position.y + y * 1.5f);
+            Vector2 p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, go_mhs.transform.position.y + y * h);
             if (curPosMhs == 4 | curPosMhs == 8)
             {
-                p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, (go_mhs.transform.position.y + kotak[curPosMhs].transform.position.y + y) / 1.5f);
+                //p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, (go_mhs.transform.position.y + kotak[curPosMhs].transform.position.y + y) / 1.5f);
     }
             Vector2 p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
 
@@ -228,6 +259,9 @@ public class MahasiswaMovement : MonoBehaviour
             duration = 10f;
 
             go_mhs.GetComponent<Animator>().Play("MC_Jump");
+            GameInstance.onJump?.Invoke();
+            //go_shadow.SetActive(false);
+
             while (tParam < 1)
             {
                 tParam += Time.deltaTime * speedModifier;
@@ -251,11 +285,19 @@ public class MahasiswaMovement : MonoBehaviour
 
             }
 
+            GameInstance.onLand?.Invoke();
             go_mhs.GetComponent<Animator>().Play("MC_IdleHappy");
+            //go_shadow.SetActive(true);
+
             yield return new WaitForSeconds(0.25f);
 
             tParam = 0;
-           
+
+            if(curPosMhs == 11)
+            {
+                GameInstance.onAnimasiPintuBiru?.Invoke();
+            }
+              
 
             // LOMPAT (KOTAK 3->4 & KOTAK 7->8)
             if ((curPosMhs == 3 && i < n) | (curPosMhs == 7 && i < n))
@@ -274,16 +316,16 @@ public class MahasiswaMovement : MonoBehaviour
                 else
                 {
                     x = xPos - 0.05f;
-                    y = yPos - 0.025f;
+                    y = yPos;
                     go_mhs.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 }
-                x *= Screen.width / 1024f;
-                y *= Screen.height / 576f;
 
                 p0 = go_mhs.transform.position;
                 p1 = new Vector2(go_mhs.transform.position.x - x / 2, (go_mhs.transform.position.y + kotak[curPosMhs].transform.position.y + y) / 2);
                 p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
-                
+
+                GameInstance.onJump?.Invoke();
+                //go_shadow.SetActive(false);
                 duration = 10f;
                 //speedModifier = 1f;
 
@@ -299,15 +341,19 @@ public class MahasiswaMovement : MonoBehaviour
                     if (curPosMhs == 4 || curPosMhs == 8)
                     {
                         if (curPosMhs == 4)
-                            targetScale = new Vector3(0.85f, 0.85f, 1);
+                            targetScale = new Vector3(8.5f, 8.5f, 1);
                         else
-                            targetScale = new Vector3(0.75f, 0.75f, 1);
+                            targetScale = new Vector3(7.5f, 7.5f, 1);
                         go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
                     }
 
                     yield return new WaitForEndOfFrame();
 
                 }
+                go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
+                GameInstance.onLand?.Invoke();
+                //go_shadow.SetActive(true);
+
                 yield return new WaitForSeconds(0.375f);
                 //speedModifier = 1f;
                 tParam = 0;
@@ -317,53 +363,51 @@ public class MahasiswaMovement : MonoBehaviour
             // JALAN
             else
             {
-                go_mhs.GetComponent<Animator>().Play("MC_Walk");
-                if (curPosMhs >= 1 && curPosMhs <= 3)
+                if((curPosMhs == 4 && i <= n) | (curPosMhs == 8 && i <= n))
                 {
-                    duration = 1.35f;
-                    x = xPos;
-                    y = yPos;
-                }
-                if (curPosMhs >= 4 && curPosMhs <= 7)
-                {
-                    duration = 1.25f;
-                    x = -xPos + 0.05f;
-                    y = yPos - 0.1f;
-                }
-                else if (curPosMhs >= 8)
-                {
-                    duration = 1.15f;
-                    x = xPos - 0.05f;
-                    y = yPos - 0.025f;
-                }
-                x *= Screen.width / 1024f;
-                y *= Screen.height / 576f;
 
-                startPosMhs = go_mhs.transform.position;
-                percent = 0;
-                timeFactor = 1 / duration;
-
-                while (percent < 1)
+                }
+                else
                 {
-                    percent += Time.deltaTime * timeFactor;
-
-                    EndPosMhs = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y); //ditambah dengan posisi tile target
-                    if (curPosMhs == 4 | curPosMhs == 8)
+                    go_mhs.GetComponent<Animator>().Play("MC_Walk");
+                    if (curPosMhs >= 1 && curPosMhs <= 3)
                     {
-                        duration = 0.5f;
-                        if (curPosMhs == 4)
-                            x = -xPos + 5;
-                        else
-                            x = xPos - 5;
-                        x *= Screen.width / 1024f;
+                        duration = 1.35f;
+                        x = xPos;
+                        y = yPos;
+                    }
+                    if (curPosMhs >= 4 && curPosMhs <= 7)
+                    {
+                        duration = 1.25f;
+                        x = -xPos + 0.075f;
+                        y = yPos - 0.1f;
+                    }
+                    else if (curPosMhs >= 8)
+                    {
+                        duration = 1.15f;
+                        x = xPos - 0.05f;
+                        y = yPos;
                     }
 
-                    go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
-                                                                                                                       //time += Time.deltaTime;
-                    yield return null;
+                    startPosMhs = go_mhs.transform.position;
+                    percent = 0;
+                    timeFactor = 1 / duration;
+
+                    while (percent < 1)
+                    {
+                        percent += Time.deltaTime * timeFactor;
+
+                        EndPosMhs = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y); //ditambah dengan posisi tile target
+
+                        go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
+                                                                                                                           //time += Time.deltaTime;
+                        yield return null;
+                    }
                 }
+                
             }
-            
+
+            go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
 
             if (curPosMhs == 11)
             {
@@ -372,9 +416,10 @@ public class MahasiswaMovement : MonoBehaviour
 
         }
 
-        go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
+        
         if (curPosMhs == 11)
         {
+            go_mhs.GetComponent<Animator>().Play("MC_IdleHappy");
             this.Wait(0.5f, () =>
             {
                 GameInstance.onGameOver?.Invoke(true);
@@ -394,10 +439,11 @@ public class MahasiswaMovement : MonoBehaviour
 
         if (n > 0)
         {
-            //onHappy();
-            for (int i = 1; i <= counter; i++)
+            go_mhs.GetComponent<Animator>().Play("MC_IdleHappy");
+            for (int i = 1; i <= n; i++)
             {
                 curPosMhs++;
+
                 if (curPosMhs >= 4 && curPosMhs <= 7)
                 {
                     go_mhs.transform.localRotation = Quaternion.Euler(0, 180f, 0);
@@ -407,6 +453,7 @@ public class MahasiswaMovement : MonoBehaviour
                     go_mhs.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 }
 
+
                 RectTransform kotakRT;
                 RectTransform MhsRT = go_mhs.GetComponent<RectTransform>();
                 Vector2 startPosMhs;
@@ -414,47 +461,49 @@ public class MahasiswaMovement : MonoBehaviour
                 float percent;
                 float timeFactor;
                 float duration;
-                            
+
                 //LOMPAT
                 kotakRT = kotak[curPosMhs].GetComponent<RectTransform>();
                 if (curPosMhs >= 1 && curPosMhs <= 3)
                 {
-                    x = -kotakRT.rect.width / 2 + 25;
+                    x = -0.75f;
                     y = yPos;
                 }
-                if (curPosMhs >= 5 && curPosMhs <= 7)
+                else if (curPosMhs >= 5 && curPosMhs <= 7)
                 {
-                    x = kotakRT.rect.width / 2 - 15;
-                    y = yPos - 10;
+                    x = 0.7f;
+                    y = yPos - 0.1f;
                 }
                 else if (curPosMhs >= 9)
                 {
-                    x = -kotakRT.rect.width / 2 + 25;
-                    y = yPos - 2.5f;
+                    x = -0.45f;
+                    y = yPos;
                 }
                 else if (curPosMhs == 4)
                 {
-                    x = -xPos + 5;
-                    y = yPos - 10;
+                    x = -xPos + 0.075f;
+                    y = yPos - 0.1f;
                 }
                 else if (curPosMhs == 8)
                 {
-                    x = xPos - 5;
-                    y = yPos - 2.5f;
+                    x = xPos - 0.05f;
+                    y = yPos;
                 }
-                x *= Screen.width / 1024f;
-                y *= Screen.height / 576f;
 
                 Vector2 p0 = go_mhs.transform.position;
-                Vector2 p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, go_mhs.transform.position.y + y * 1.5f);
-                Vector2 p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
+                Vector2 p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, go_mhs.transform.position.y + y * -10f);
                 if (curPosMhs == 4 | curPosMhs == 8)
                 {
-                    p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, (go_mhs.transform.position.y + kotak[curPosMhs].transform.position.y + y) / 1.5f);
+                    //p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, (go_mhs.transform.position.y + kotak[curPosMhs].transform.position.y + y) / 1.5f);
                 }
+                Vector2 p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
 
                 Vector3 targetScale;
                 duration = 10f;
+
+                go_mhs.GetComponent<Animator>().Play("MC_Jump");
+                GameInstance.onJump?.Invoke();
+                //go_shadow.SetActive(false);
 
                 while (tParam < 1)
                 {
@@ -468,9 +517,9 @@ public class MahasiswaMovement : MonoBehaviour
                     if (curPosMhs == 4 || curPosMhs == 8)
                     {
                         if (curPosMhs == 4)
-                            targetScale = new Vector3(0.85f, 0.85f, 1);
+                            targetScale = new Vector3(8.5f, 8.5f, 1);
                         else
-                            targetScale = new Vector3(0.75f, 0.75f, 1);
+                            targetScale = new Vector3(7.5f, 7.5f, 1);
                         go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
                     }
 
@@ -479,37 +528,182 @@ public class MahasiswaMovement : MonoBehaviour
 
                 }
 
+                GameInstance.onLand?.Invoke();
+                go_mhs.GetComponent<Animator>().Play("MC_IdleHappy");
+                //go_shadow.SetActive(true);
+
                 yield return new WaitForSeconds(0.25f);
 
                 tParam = 0;
 
-                // LOMPAT (KOTAK 3->4 & KOTAK 7->8)
-                if ((curPosMhs == 3 && i < counter) | (curPosMhs == 7 && i < counter))
-                {
-                    Debug.Log("masuk if KARTU POSITIF");
-                    curPosMhs++;
-                    Debug.Log("curposmhs : " + curPosMhs);
-                    //kotakRT = kotak[curPosMhs].GetComponent<RectTransform>();
 
-                   if (curPosMhs == 4)
+                // LOMPAT (KOTAK 3->4 & KOTAK 7->8)
+                if ((curPosMhs == 3 && i < n) | (curPosMhs == 7 && i < n))
+                {
+                    Debug.Log("masuk lompat");
+                    go_mhs.GetComponent<Animator>().Play("MC_Jump");
+                    Debug.Log("masuk if");
+                    curPosMhs++;
+                    kotakRT = kotak[curPosMhs].GetComponent<RectTransform>();
+
+                    if (curPosMhs == 4)
                     {
-                        x = -xPos + 5;
-                        y = yPos - 10;
+                        x = -xPos + 0.075f;
+                        y = yPos - 0.1f;
                         go_mhs.transform.localRotation = Quaternion.Euler(0, 180f, 0);
                     }
-                    else if (curPosMhs == 8)
+                    else
                     {
-                        x = xPos - 5;
-                        y = yPos - 2.5f;
+                        x = xPos - 0.05f;
+                        y = yPos;
                         go_mhs.transform.localRotation = Quaternion.Euler(0, 0, 0);
                     }
-                    x *= Screen.width / 1024f;
-                    y *= Screen.height / 576f;
 
                     p0 = go_mhs.transform.position;
                     p1 = new Vector2(go_mhs.transform.position.x - x / 2, (go_mhs.transform.position.y + kotak[curPosMhs].transform.position.y + y) / 2);
                     p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
 
+                    GameInstance.onJump?.Invoke();
+                    go_mhs.GetComponent<Animator>().Play("MC_Jump");
+                    duration = 10f;
+            
+                    while (tParam < 1)
+                    {
+                        tParam += Time.deltaTime * speedModifier;
+
+                        MahasiswaPosition = Mathf.Pow(1 - tParam, 2) * p0 +
+                            2 * (1 - tParam) * tParam * p1 + Mathf.Pow(tParam, 2) * p2;
+
+                        transform.position = MahasiswaPosition;
+
+                        if (curPosMhs == 4 || curPosMhs == 8)
+                        {
+                            if (curPosMhs == 4)
+                                targetScale = new Vector3(8.5f, 8.5f, 1);
+                            else
+                                targetScale = new Vector3(7.5f, 7.5f, 1);
+                            go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
+                        }
+
+                        yield return new WaitForEndOfFrame();
+
+                    }
+                    go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
+                    GameInstance.onLand?.Invoke();
+                    //go_shadow.SetActive(true);
+
+                    yield return new WaitForSeconds(0.375f);
+                    //speedModifier = 1f;
+                    tParam = 0;
+                    i++;
+                }
+
+                // JALAN
+                else
+                {
+                    if (curPosMhs == 4| curPosMhs == 8)
+                    {
+
+                    }
+                    else
+                    {
+                                              
+                        if (curPosMhs >= 1 && curPosMhs <= 3)
+                        {
+                            duration = 1.35f;
+                            x = xPos;
+                            y = yPos;
+                        }
+                        if (curPosMhs >= 4 && curPosMhs <= 7)
+                        {
+                            duration = 1.25f;
+                            x = -xPos + 0.075f;
+                            y = yPos - 0.1f;
+                        }
+                        else if (curPosMhs >= 8)
+                        {
+                            duration = 1.15f;
+                            x = xPos - 0.05f;
+                            y = yPos;
+                        }
+
+                        startPosMhs = go_mhs.transform.position;
+                        percent = 0;
+                        timeFactor = 1 / duration;
+
+                        go_mhs.GetComponent<Animator>().Play("MC_Walk");
+
+                        while (percent < 1)
+                        {
+                            percent += Time.deltaTime * timeFactor;
+
+                            EndPosMhs = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y); //ditambah dengan posisi tile target
+
+                            go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
+                                                                                                                               //time += Time.deltaTime;
+                            yield return null;
+                        }
+                    }
+                }
+                  
+                go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
+
+            }
+
+        }
+        else if (n < 0)
+        {
+            go_mhs.GetComponent<Animator>().Play("MC_IdlePanic");
+            for (int i = 1; i <= counter; i++)
+            {
+                curPosMhs--;
+
+                if (curPosMhs == 6 | curPosMhs == 3)
+                {
+                    go_mhs.transform.localRotation = Quaternion.Euler(0, 0f, 0);
+                }
+                else
+                {
+                    go_mhs.transform.localRotation = Quaternion.Euler(0, 180f, 0);
+                }
+
+                RectTransform kotakRT;
+                Vector2 startPosMhs;
+                Vector2 EndPosMhs;
+                Vector3 targetScale;
+                float percent;
+                float timeFactor;
+                float duration;
+
+                Vector2 p0;
+                Vector2 p1;
+                Vector2 p2;
+
+                if ((curPosMhs == 3 && i <= n) | (curPosMhs == 7 && i <= n))
+                {
+                    Debug.Log("masuk if");
+                    curPosMhs++;
+                    kotakRT = kotak[curPosMhs].GetComponent<RectTransform>();
+
+                    if (curPosMhs == 3)
+                    {
+                        x = xPos;
+                        y = yPos;
+                        go_mhs.transform.localRotation = Quaternion.Euler(0, 180f, 0);
+                    }
+                    else
+                    {
+                        x = - xPos + 0.05f;
+                        y = yPos - 0.1f;
+                        go_mhs.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                    }
+
+                    p0 = go_mhs.transform.position;
+                    p1 = new Vector2(go_mhs.transform.position.x - x / 2, (go_mhs.transform.position.y + kotak[curPosMhs].transform.position.y + y) / 2);
+                    p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
+
+                    GameInstance.onJump?.Invoke();
+                    go_mhs.GetComponent<Animator>().Play("MC_JumpPanic");
                     duration = 10f;
                     //speedModifier = 1f;
 
@@ -525,227 +719,141 @@ public class MahasiswaMovement : MonoBehaviour
                         if (curPosMhs == 4 || curPosMhs == 8)
                         {
                             if (curPosMhs == 4)
-                                targetScale = new Vector3(0.85f, 0.85f, 1);
+                                targetScale = new Vector3(8.5f, 8.5f, 1);
                             else
-                                targetScale = new Vector3(0.75f, 0.75f, 1);
+                                targetScale = new Vector3(7.5f, 7.5f, 1);
                             go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
                         }
 
                         yield return new WaitForEndOfFrame();
 
                     }
+                    go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
+                    GameInstance.onLand?.Invoke();
+                    //go_shadow.SetActive(true);
+
                     yield return new WaitForSeconds(0.375f);
                     //speedModifier = 1f;
                     tParam = 0;
                     i++;
                 }
-
-                // JALAN
                 else
                 {
+                    //JALAN
+                    if (curPosMhs == 3 | curPosMhs == 7)
+                    {
+
+                    }
+                    else
+                    {
+                        duration = 1.25f;
+
+                        if (curPosMhs >= 1 && curPosMhs <= 3)
+                        {
+                            x = 0.75f;
+                            y = yPos;
+                        }
+                        else if (curPosMhs >= 5 && curPosMhs <= 7)
+                        {
+                            x = -0.7f;
+                            y = yPos - 0.1f;
+                        }
+                        else if (curPosMhs >= 8)
+                        {
+                            x = 0.45f;
+                            y = yPos;
+                        }
+
+                        startPosMhs = go_mhs.transform.position;
+                        percent = 0;
+                        timeFactor = 1 / duration;
+
+                        go_mhs.GetComponent<Animator>().Play("MC_WalkPanic");
+                        while (percent < 1)
+                        {
+                            percent += Time.deltaTime * timeFactor;
+
+                            EndPosMhs = new Vector2(kotak[curPosMhs + 1].transform.position.x - x, kotak[curPosMhs + 1].transform.position.y + y); //ditambah dengan posisi tile target
+
+                            go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
+                                                                                                                               //time += Time.deltaTime;
+                            yield return null;
+                        }
+                        go_mhs.GetComponent<Animator>().Play("MC_IdlePanic");
+                    }
+
+
+                    //LOMPAT
+                    kotakRT = kotak[curPosMhs].GetComponent<RectTransform>();
                     if (curPosMhs >= 1 && curPosMhs <= 3)
                     {
-                        duration = 1.35f;
                         x = xPos;
                         y = yPos;
                     }
-                    if (curPosMhs >= 4 && curPosMhs <= 7)
+                    else if (curPosMhs >= 5 && curPosMhs <= 7)
                     {
-                        duration = 1.25f;
-                        x = -xPos + 5;
-                        y = yPos - 10;
+                        x = -xPos + 0.075f;
+                        y = yPos - 0.1f;
                     }
-                    else if (curPosMhs >= 8)
+                    else if (curPosMhs >= 9)
                     {
-                        duration = 1.15f;
-                        x = xPos - 5;
-                        y = yPos - 2.5f;
-                    }
-                    x *= Screen.width / 1024f;
-                    y *= Screen.height / 576f;
-
-                    startPosMhs = go_mhs.transform.position;
-                    percent = 0;
-                    timeFactor = 1 / duration;
-
-                    while (percent < 1)
-                    {
-                        percent += Time.deltaTime * timeFactor;
-
-                        EndPosMhs = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y); //ditambah dengan posisi tile target
-
-                        go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
-                                                                                                                           //time += Time.deltaTime;
-                        yield return null;
-                    }
-                }
-
-            }
-
-        }
-        else if (n < 0)
-        {
-            onPanik();
-            for (int i = 1; i <= counter; i++)
-            {
-                curPosMhs--;
-
-                if (curPosMhs == 6 | curPosMhs == 3)
-                {
-                    go_mhs.transform.localRotation = Quaternion.Euler(0, 0f, 0);
-                }
-                else
-                {
-                    go_mhs.transform.localRotation = Quaternion.Euler(0, 180f, 0);
-                }
-
-                RectTransform kotakRT;
-                RectTransform MhsRT = go_mhs.GetComponent<RectTransform>();
-                Vector2 startPosMhs;
-                Vector2 EndPosMhs;
-                float percent;
-                float timeFactor;
-                float duration;
-
-                //JALAN
-                if (curPosMhs == 3 | curPosMhs == 7)
-                {
-                   
-                }
-                else
-                {
-                    Debug.Log("MASUK IF KARTU MASUK IF KARTU");
-                    duration = 1.25f;
-                    kotakRT = kotak[curPosMhs + 1].GetComponent<RectTransform>();
-
-                    if (curPosMhs >= 1 && curPosMhs <= 2)
-                    {
-                        x = kotakRT.rect.width / 2 - 25;
+                        x = xPos - 0.05f;
                         y = yPos;
                     }
-                    if (curPosMhs >= 4 && curPosMhs <= 6)
+                    else if (curPosMhs == 4)
                     {
-                        x = -kotakRT.rect.width / 2 + 15;
-                        y = yPos - 10;
+                        x = -xPos + 0.075f;
+                        y = yPos - 0.1f;
                     }
-                    else if (curPosMhs >= 8)
+                    else if (curPosMhs == 8)
                     {
-                        x = kotakRT.rect.width / 2 - 25;
-                        y = yPos - 2.5f;
+                        x = xPos - 0.05f;
+                        y = yPos;
                     }
 
-                    x *= Screen.width / 1024f;
-                    y *= Screen.height / 576f;
-
-                    startPosMhs = go_mhs.transform.position;
-                    percent = 0;
-                    timeFactor = 1 / duration;
-
-                    while (percent < 1)
-                    {
-                        percent += Time.deltaTime * timeFactor;
-
-                        EndPosMhs = new Vector2(kotak[curPosMhs + 1].transform.position.x - x, kotak[curPosMhs + 1].transform.position.y + y); //ditambah dengan posisi tile target
-
-                        go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
-                                                                                                                           //time += Time.deltaTime;
-                        yield return null;
-                    }
-                }
-               
-
-                //LOMPAT
-                kotakRT = kotak[curPosMhs].GetComponent<RectTransform>();
-                if (curPosMhs >= 1 && curPosMhs <= 3)
-                {
-                    x = xPos;
-                    y = yPos;
-                }
-                if (curPosMhs >= 4 && curPosMhs <= 7)
-                {
-                    x = - xPos + 5;
-                    y = yPos - 10;
-                }
-                else if (curPosMhs >= 8)
-                {
-                    x = xPos - 5;
-                    y = yPos - 2.5f;
-                }
-                x *= Screen.width / 1024f;
-                y *= Screen.height / 576f;
-
-                Vector2 p0 = go_mhs.transform.position;
-                Vector2 p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, go_mhs.transform.position.y + y * 1.5f);
-                Vector2 p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
-                if (curPosMhs == 3 || curPosMhs == 7)
-                {
-                    //p1 = new Vector2(go_mhs.transform.position.x + x * 2, go_mhs.transform.position.y - y / 2);
-                    //p2 = new Vector2(go_mhs.transform.position.x + x, go_mhs.transform.position.y - y);
-                }
-
-                Vector3 targetScale;
-                duration = 10f;
-
-                while (tParam < 1)
-                {
-                    tParam += Time.deltaTime * speedModifier;
-
-                    MahasiswaPosition = Mathf.Pow(1 - tParam, 2) * p0 +
-                        2 * (1 - tParam) * tParam * p1 + Mathf.Pow(tParam, 2) * p2;
-
-                    transform.position = MahasiswaPosition;
-
+                    p0 = go_mhs.transform.position;
+                    p1 = new Vector2((go_mhs.transform.position.x + kotak[curPosMhs].transform.position.x + x) / 2, go_mhs.transform.position.y + y * -10f);
+                    p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
                     if (curPosMhs == 3 || curPosMhs == 7)
                     {
-                        if (curPosMhs == 3)
-                            targetScale = new Vector3(1, 1, 1);
-                        else
-                            targetScale = new Vector3(0.85f, 0.85f, 1);
-                        go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
+                        //p1 = new Vector2(go_mhs.transform.position.x + x * 2, go_mhs.transform.position.y - y / 2);
+                        //p2 = new Vector2(go_mhs.transform.position.x + x, go_mhs.transform.position.y - y);
                     }
 
+                    duration = 10f;
 
-                    yield return new WaitForEndOfFrame();
+                    go_mhs.GetComponent<Animator>().Play("MC_JumpPanic");
+                    GameInstance.onJump?.Invoke();
+                   
+                    while (tParam < 1)
+                    {
+                        tParam += Time.deltaTime * speedModifier;
 
-                }
+                        MahasiswaPosition = Mathf.Pow(1 - tParam, 2) * p0 +
+                            2 * (1 - tParam) * tParam * p1 + Mathf.Pow(tParam, 2) * p2;
 
-                yield return new WaitForSeconds(0.25f);
+                        transform.position = MahasiswaPosition;
 
-                tParam = 0;
+                        if (curPosMhs == 3 || curPosMhs == 7)
+                        {
+                            if (curPosMhs == 3)
+                                targetScale = new Vector3(10, 10, 1);
+                            else
+                                targetScale = new Vector3(8.5f, 8.5f, 1);
+                            go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
+                        }
 
-                ////JALAN
-                //if(curPosMhs == 3| curPosMhs == 7)
-                //{
-                //    duration = 1.25f;
-                //    if (curPosMhs == 3)
-                //    {
-                //        x = xPos;
-                //        y = yPos;
-                //    }
-                //    else if (curPosMhs == 7)
-                //    {
-                //        x = -xPos + 5;
-                //        y = yPos - 10;
-                //    }
-                //    x *= Screen.width / 1024f;
-                //    y *= Screen.height / 576f;
 
-                //    startPosMhs = go_mhs.transform.position;
-                //    percent = 0;
-                //    timeFactor = 1 / duration;
+                        yield return new WaitForEndOfFrame();
 
-                //    while (percent < 1)
-                //    {
-                //        percent += Time.deltaTime * timeFactor;
+                    }
+                    go_mhs.GetComponent<Animator>().Play("MC_IdlePanic");
+                    GameInstance.onLand?.Invoke();
 
-                //        EndPosMhs = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y); //ditambah dengan posisi tile target
+                    yield return new WaitForSeconds(0.25f);
 
-                //        go_mhs.transform.position = Vector2.Lerp(startPosMhs, EndPosMhs, Mathf.SmoothStep(0, 1, percent)); //diganti jadi world position karena masalah sort rendering
-                //                                                                                                           //time += Time.deltaTime;
-                //        yield return null;
-                //    }
-                //}
-                
+                    tParam = 0;
+                }                  
 
             }
         }
@@ -764,26 +872,32 @@ public class MahasiswaMovement : MonoBehaviour
             }
         }
         else if (n == 0)
-            //MahasiswaImg.sprite = MahasiswaSprites[3];
+            go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
 
         curPosDos = go_dosen.GetComponent<DosenMovement>().getCurPosDosen();
         if (curPosDos == curPosMhs)
         {
-            //MahasiswaImg.sprite = MahasiswaSprites[3];
-            GameInstance.onDosenMarah?.Invoke(true);
-            this.Wait(1.5f, () =>
+            this.Wait(0.25f, () =>
             {
-                //MahasiswaImg.sprite = MahasiswaSprites[0];
-                GameInstance.onDosenMarah?.Invoke(false);
-                this.Wait(0.5f, () =>
+                go_mhs.GetComponent<Animator>().Play("MC_IdlePanic");
+                go_dosen.GetComponent<Animator>().Play("PakGery_IdleKesal");
+                GameInstance.onDosenMarah?.Invoke(true);
+                this.Wait(1.5f, () =>
                 {
-                    GameInstance.onGiliranDosen?.Invoke();
+                    go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
+                    go_dosen.GetComponent<Animator>().Play("PakGery_IdleNormal");
+                    GameInstance.onDosenMarah?.Invoke(false);
+                    this.Wait(0.5f, () =>
+                    {
+                        GameInstance.onGiliranDosen?.Invoke();
+                    });
                 });
             });
+               
         }
         else
         {
-            //MahasiswaImg.sprite = MahasiswaSprites[0];
+            go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
             this.Wait(0.25f, () =>
             {
                 GameInstance.onGiliranDosen?.Invoke();

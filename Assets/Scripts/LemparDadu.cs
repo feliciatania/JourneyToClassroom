@@ -42,6 +42,8 @@ public class LemparDadu : MonoBehaviour
     IEnumerator RollTheDice()
     {
         int randomDiceSide = 0;
+
+        GameInstance.onDiceRoll?.Invoke(true);
         for (int i = 0; i <= 30; i++)
         {
             randomDiceSide = UnityEngine.Random.Range(0, 3);
@@ -50,8 +52,11 @@ public class LemparDadu : MonoBehaviour
 
             yield return new WaitForSeconds(0.05f);
         }
+
+        GameInstance.onDiceRoll?.Invoke(false);
+
         angkaDadu = randomDiceSide + 1;
-        //angkaDadu = 12;
+        //angkaDadu = 9;
 
         go_Dadu.GetComponent<Animator>().Play("StopDadu");
     }

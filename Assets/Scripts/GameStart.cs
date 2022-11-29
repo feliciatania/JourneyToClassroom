@@ -8,6 +8,7 @@ public class GameStart : MonoBehaviour
     void Start()
     {
         GameInstance.onCover?.Invoke();
+        GameInstance.onCoverGame?.Invoke();
     }
 
     // Update is called once per frame

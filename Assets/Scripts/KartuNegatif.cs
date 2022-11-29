@@ -31,52 +31,27 @@ public class KartuNegatif : MonoBehaviour
 
     public void onKartuNegatif(int curPosMhs)
     {
-        Debug.Log(curPosMhs);
-        if (curPosMhs == 4)
+        x = UnityEngine.Random.Range(0, 3);
+        if (x == 0)
         {
-            x = UnityEngine.Random.Range(0, 3);
-            if (x == 0)
-            {
-                kalNegTxt.text = kartuNegatif[0];
-                kalPerintahNegTxt.text = kartuNegatifPerintah[0];
-                majuOrMundur = 0;
-            }
-            else if (x == 1)
-            {
-                kalNegTxt.text = kartuNegatif[1];
-                kalPerintahNegTxt.text = kartuNegatifPerintah[1];
-                majuOrMundur = -1;
-            }
-            else
-            {
-                kalNegTxt.text = kartuNegatif[3];
-                kalPerintahNegTxt.text = kartuNegatifPerintah[3];
-                majuOrMundur = -3;
-            }
+            kalNegTxt.text = kartuNegatif[0];
+            kalPerintahNegTxt.text = kartuNegatifPerintah[0];
+            majuOrMundur = 0;
         }
-        else if (curPosMhs == 9)
+        else if (x == 1)
         {
-            x = UnityEngine.Random.Range(0, 3);
-            if (x == 0)
-            {
-                kalNegTxt.text = kartuNegatif[0];
-                kalPerintahNegTxt.text = kartuNegatifPerintah[0];
-                majuOrMundur = 0;
-            }
-            else if (x == 1)
-            {
-                kalNegTxt.text = kartuNegatif[1];
-                kalPerintahNegTxt.text = kartuNegatifPerintah[1];
-                majuOrMundur = -1;
-            }
-            else
-            {
-                kalNegTxt.text = kartuNegatif[3];
-                kalPerintahNegTxt.text = kartuNegatifPerintah[3];
-                majuOrMundur = -3;
-            }
+            kalNegTxt.text = kartuNegatif[1];
+            kalPerintahNegTxt.text = kartuNegatifPerintah[1];
+            majuOrMundur = -1;
         }
-        //majuOrMundur = -3;
+        else
+        {
+            kalNegTxt.text = kartuNegatif[3];
+            kalPerintahNegTxt.text = kartuNegatifPerintah[3];
+            majuOrMundur = -3;
+        }
+
+        majuOrMundur = -3;
     }
 
     public void onButtonOK(bool b)

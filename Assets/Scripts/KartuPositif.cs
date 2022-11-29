@@ -29,38 +29,18 @@ public class KartuPositif : MonoBehaviour
     }
     public void OnKartuPositif(int curPosMhs)
     {
-        //Debug.Log("KARTU POSITIF POS MAHASISWA : " + curPosMhs);
-        if (curPosMhs == 2)
+        x = UnityEngine.Random.Range(0, 2);
+        if (x == 0)
         {
-            x = UnityEngine.Random.Range(0, 2);
-            if (x == 0)
-            {
-                kalPosTxt.text = kartuPositif[0];
-                kalPerintahPosTxt.text = kartuPositifPerintah[0];
-                majuOrMundur = 1;
-            }
-            else
-            {
-                kalPosTxt.text = kartuPositif[2];
-                kalPerintahPosTxt.text = kartuPositifPerintah[2];
-                majuOrMundur = 3;
-            }
+            kalPosTxt.text = kartuPositif[0];
+            kalPerintahPosTxt.text = kartuPositifPerintah[0];
+            majuOrMundur = 1;
         }
-        else if (curPosMhs == 7)
+        else
         {
-            x = UnityEngine.Random.Range(0, 2);
-            if (x == 0)
-            {
-                kalPosTxt.text = kartuPositif[0];
-                kalPerintahPosTxt.text = kartuPositifPerintah[0];
-                majuOrMundur = 1;
-            }
-            else
-            {
-                kalPosTxt.text = kartuPositif[2];
-                kalPerintahPosTxt.text = kartuPositifPerintah[2];
-                majuOrMundur = 3;
-            }
+            kalPosTxt.text = kartuPositif[2];
+            kalPerintahPosTxt.text = kartuPositifPerintah[2];
+            majuOrMundur = 3;
         }
         //majuOrMundur = 3;
     }

@@ -15,7 +15,6 @@ public class TutorialSwipeControl : MonoBehaviour
     public GameObject buttonHome;
     public Image[] circle;
     public Sprite[] circleSprite;
-    bool isTutorial;
    
     void Awake()
     {
@@ -35,13 +34,11 @@ public class TutorialSwipeControl : MonoBehaviour
 
     public void onTutorial()
     {
-        isTutorial = true;
         restartPosisi();
     }
 
     public void onPlayGame()
     {
-        isTutorial = false;
         restartPosisi();
     }
 

@@ -12,7 +12,7 @@ public static class WaitExtension
 
     private static IEnumerator ExecuteAction (float delay, UnityAction action)
     {
-        yield return new WaitForSecondsRealtime (delay);
+        yield return new WaitForSeconds (delay);
         action.Invoke();
         yield break;
     }

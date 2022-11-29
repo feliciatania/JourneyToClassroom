@@ -7,7 +7,7 @@ public class UICanvasSpawner : MonoBehaviour
 {
     public GameObject GO_Cover;
     public GameObject GO_HowToPlay;
-    //public GameObject GO_PlayGame;
+    public GameObject GO_PauseMenu;
     public GameObject GO_Papan;
     public GameObject GO_GilMahasiswa;
     public GameObject GO_KartuPositif;
@@ -20,6 +20,7 @@ public class UICanvasSpawner : MonoBehaviour
     public GameObject GO_GilDosen;
     public GameObject GO_Win;
     public GameObject GO_Lose;
+    public GameObject GO_ButtonPause;
 
     void Start()
     {
@@ -27,6 +28,8 @@ public class UICanvasSpawner : MonoBehaviour
         GameInstance.onHowToPlay += onHowToPlay;
         GameInstance.onPlayGame += onPlayGame;
         GameInstance.onGameStart += onStart;
+        GameInstance.onPause += onPause;
+        GameInstance.onResume += onResume;
         GameInstance.onGiliranMahasiswa += onGiliranMahasiswa;
         GameInstance.onKartuPositif += OnKartuPositif;
         GameInstance.onKartuNegatif += OnKartuNegatif;
@@ -41,8 +44,6 @@ public class UICanvasSpawner : MonoBehaviour
         GameInstance.onMahasiswaMoveOnKartu += onMahasiswaMoveOnKartu;
         GameInstance.onReplay += onReplay;
 
-        //Pertama kali dipanggil 
-        //GameInstance.onCover?.Invoke();
     }
 
     private void onReplay()
@@ -50,6 +51,7 @@ public class UICanvasSpawner : MonoBehaviour
         GO_Win.SetActive(false);
         GO_Lose.SetActive(false);
         GO_Cover.SetActive(true);
+        GameInstance.onCoverGame?.Invoke();
     }
     private void onCover()
     {
@@ -68,6 +70,7 @@ public class UICanvasSpawner : MonoBehaviour
         GO_Quiz.SetActive(false);
         GO_WaktuHabis.SetActive(false);
         GO_Win.SetActive(false);
+        GO_PauseMenu.SetActive(false);
     }
     private void onHowToPlay()
     {
@@ -78,16 +81,29 @@ public class UICanvasSpawner : MonoBehaviour
     {
         GO_Cover.SetActive(false);
         GO_HowToPlay.SetActive(true);
+        GO_Papan.SetActive(true);
     }
     private void onStart()
     {
         GO_HowToPlay.SetActive(false);
         GO_Papan.SetActive(true);
-        this.Wait(1f, () =>
+        this.Wait(4.5f, () =>
         {
             GameInstance.onGiliranMahasiswa?.Invoke();
         });
     }
+    private void onPause()
+    {
+        GO_PauseMenu.SetActive(true);
+        GO_ButtonPause.SetActive(false);
+    }
+
+    private void onResume()
+    {
+        GO_PauseMenu.SetActive(false);
+        GO_ButtonPause.SetActive(true);
+    }
+
     private void onGiliranMahasiswa()
     {
         GO_GilMahasiswa.SetActive(true);
@@ -104,6 +120,7 @@ public class UICanvasSpawner : MonoBehaviour
         {
             GO_GilDosen.SetActive(false);
             GameInstance.onDosenMove?.Invoke();
+            GO_ButtonPause.SetActive(true);
         });
     }
     private void OnKartuPositif(int x)
@@ -126,15 +143,12 @@ public class UICanvasSpawner : MonoBehaviour
     private void onQuizStart()
     {
         GO_Quiz.SetActive(true);
+        GO_ButtonPause.SetActive(false);
     }
     private void onJawabanBenar()
     {
         GO_Quiz.SetActive(false);
         GO_JawabanBenar.SetActive(true);
-        this.Wait(2f, () =>
-        {
-            GO_JawabanSalah.SetActive(false);
-        });
     }
     private void onJawabanSalah()
     {
@@ -159,6 +173,7 @@ public class UICanvasSpawner : MonoBehaviour
     private void onLemparDadu()
     {
         GO_JawabanBenar.SetActive(false);
+        GO_ButtonPause.SetActive(true);
     }
     public void onMahasiswaMoveOnKartu(int x)
     {

@@ -6,6 +6,7 @@ using static CanvasQuiz;
 
 public class GameInstance : MonoBehaviour
 {
+    public static Action onCoverGame { get; set; }
     public static Action onCover { get; set; }
     public static Action onHowToPlay { get; set; }
     public static Action onPlayGame{ get; set; }
@@ -19,6 +20,9 @@ public class GameInstance : MonoBehaviour
     public static Action onJawabanSalah { get; set; }
     public static Action onTimeout { get; set; }
     public static Action onLemparDadu { get; set; }
+    public static Action <bool> onDiceRoll { get; set; }
+    public static Action onJump { get; set; }
+    public static Action onLand { get; set; }
     public static Action <int> onMahasiswaMove { get; set; }
     public static Action <int> onMahasiswaMoveOnKartu { get; set; }
     public static Action <int> onKartuPositif { get; set; }
@@ -29,7 +33,11 @@ public class GameInstance : MonoBehaviour
     public static Action <bool> onDosenMarah { get; set; }
     public static Action onGiliranDosen { get; set; }
     public static Action onDosenMove { get; set; }
+    public static Action onAnimasiPintuBiru { get; set; }
     public static Action <bool> onGameOver { get; set; }
     public static Action onReplay { get; set; }
     public static Action onNext { get; set; }
+    public static Action onPause { get; set; }
+    public static Action onResume { get; set; }
+
 }

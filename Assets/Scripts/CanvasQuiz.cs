@@ -14,6 +14,8 @@ public class CanvasQuiz : MonoBehaviour
     public TextMeshProUGUI TMP_Answer3;
     public TextMeshProUGUI TMP_Pertanyaan;
     public TextMeshProUGUI TMP_Timer;
+    public TextMeshProUGUI TMP_QuestionNumber;
+    int counter;
 
     public List<QuestionAndAnswers> QnA = new List<QuestionAndAnswers>();
 
@@ -41,10 +43,12 @@ public class CanvasQuiz : MonoBehaviour
 
     public void onGameStart()
     {
+        tempQnA = new List<QuestionAndAnswers>();
         for (int i = 0; i < QnA.Count; i++)
         {
             tempQnA.Add(QnA[i]);
         }
+        counter = 0;
     }
 
     public void onQuizStart()
@@ -55,6 +59,7 @@ public class CanvasQuiz : MonoBehaviour
 
     public void nextQuiz()
     {
+        counter++;
         answered = false;
         timeout = false;
         currentIndex = UnityEngine.Random.Range(0, tempQnA.Count);
@@ -62,6 +67,7 @@ public class CanvasQuiz : MonoBehaviour
         var currentQuiz = tempQnA[currentIndex];
         Debug.Log("jawaban :" + tempQnA[currentIndex].CorrectAnswers);
 
+        TMP_QuestionNumber.text = "QUESTION " + counter;
         TMP_Answer1.text = currentQuiz.Answers[0];
         TMP_Answer2.text = currentQuiz.Answers[1];
         TMP_Answer3.text = currentQuiz.Answers[2];
