@@ -107,6 +107,7 @@ public class UICanvasSpawner : MonoBehaviour
     private void onGiliranMahasiswa()
     {
         GO_GilMahasiswa.SetActive(true);
+        GO_ButtonPause.SetActive(false);
         this.Wait(1.5f, () =>
         {
             GO_GilMahasiswa.SetActive(false);
@@ -116,6 +117,7 @@ public class UICanvasSpawner : MonoBehaviour
     private void onGiliranDosen()
     {
         GO_GilDosen.SetActive(true);
+        GO_ButtonPause.SetActive(false);
         this.Wait(1.5f, () =>
         {
             GO_GilDosen.SetActive(false);
@@ -123,15 +125,19 @@ public class UICanvasSpawner : MonoBehaviour
             GO_ButtonPause.SetActive(true);
         });
     }
-    private void OnKartuPositif(int x)
+    private void OnKartuPositif()
     {
         GO_KartuPositif.SetActive(true);
-        GameObject.Find("Kartu Positif").GetComponent<KartuPositif>().OnKartuPositif(x);
+        GO_ButtonPause.SetActive(false);
+        GameObject.Find("GameManager").GetComponent<KartuPositif>().OnKartuPositif();
+        //GameInstance.onLoadKartuPositif?.Invoke();
     }
-    private void OnKartuNegatif(int x)
+    private void OnKartuNegatif()
     {
         GO_KartuNegatif.SetActive(true);
-        GameObject.Find("Kartu Negatif").GetComponent<KartuNegatif>().onKartuNegatif(x);
+        GO_ButtonPause.SetActive(false);
+        GameObject.Find("GameManager").GetComponent<KartuNegatif>().onKartuNegatif();
+        //GameInstance.onLoadKartuNegatif?.Invoke();
     }
     private void OnDosenMarah(bool marah)
     {
@@ -143,7 +149,6 @@ public class UICanvasSpawner : MonoBehaviour
     private void onQuizStart()
     {
         GO_Quiz.SetActive(true);
-        GO_ButtonPause.SetActive(false);
     }
     private void onJawabanBenar()
     {
@@ -179,6 +184,7 @@ public class UICanvasSpawner : MonoBehaviour
     {
         GO_KartuNegatif.SetActive(false);
         GO_KartuPositif.SetActive(false);
+        GO_ButtonPause.SetActive(true);
     }
     private void onGameOver(bool win)
     {

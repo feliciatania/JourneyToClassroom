@@ -116,11 +116,11 @@ public class MahasiswaMovement : MonoBehaviour
         
         if (curPosMhs == 2 | curPosMhs == 7)
         {
-            GameInstance.onKartuPositif?.Invoke(curPosMhs);
+            GameInstance.onKartuPositif?.Invoke();
         }
         else if (curPosMhs == 4 | curPosMhs == 9)
         {
-           GameInstance.onKartuNegatif?.Invoke(curPosMhs);
+           GameInstance.onKartuNegatif?.Invoke();
         }
         else
         {
@@ -260,7 +260,6 @@ public class MahasiswaMovement : MonoBehaviour
 
             go_mhs.GetComponent<Animator>().Play("MC_Jump");
             GameInstance.onJump?.Invoke();
-            //go_shadow.SetActive(false);
 
             while (tParam < 1)
             {
@@ -297,7 +296,6 @@ public class MahasiswaMovement : MonoBehaviour
             {
                 GameInstance.onAnimasiPintuBiru?.Invoke();
             }
-              
 
             // LOMPAT (KOTAK 3->4 & KOTAK 7->8)
             if ((curPosMhs == 3 && i < n) | (curPosMhs == 7 && i < n))
@@ -325,9 +323,7 @@ public class MahasiswaMovement : MonoBehaviour
                 p2 = new Vector2(kotak[curPosMhs].transform.position.x + x, kotak[curPosMhs].transform.position.y + y);
 
                 GameInstance.onJump?.Invoke();
-                //go_shadow.SetActive(false);
                 duration = 10f;
-                //speedModifier = 1f;
 
                 while (tParam < 1)
                 {
@@ -352,10 +348,8 @@ public class MahasiswaMovement : MonoBehaviour
                 }
                 go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
                 GameInstance.onLand?.Invoke();
-                //go_shadow.SetActive(true);
 
                 yield return new WaitForSeconds(0.375f);
-                //speedModifier = 1f;
                 tParam = 0;
                 i++;
             }
@@ -503,7 +497,6 @@ public class MahasiswaMovement : MonoBehaviour
 
                 go_mhs.GetComponent<Animator>().Play("MC_Jump");
                 GameInstance.onJump?.Invoke();
-                //go_shadow.SetActive(false);
 
                 while (tParam < 1)
                 {
@@ -530,7 +523,6 @@ public class MahasiswaMovement : MonoBehaviour
 
                 GameInstance.onLand?.Invoke();
                 go_mhs.GetComponent<Animator>().Play("MC_IdleHappy");
-                //go_shadow.SetActive(true);
 
                 yield return new WaitForSeconds(0.25f);
 
@@ -590,7 +582,6 @@ public class MahasiswaMovement : MonoBehaviour
                     }
                     go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
                     GameInstance.onLand?.Invoke();
-                    //go_shadow.SetActive(true);
 
                     yield return new WaitForSeconds(0.375f);
                     //speedModifier = 1f;
@@ -709,13 +700,7 @@ public class MahasiswaMovement : MonoBehaviour
 
                     while (tParam < 1)
                     {
-                        tParam += Time.deltaTime * speedModifier;
-
-                        MahasiswaPosition = Mathf.Pow(1 - tParam, 2) * p0 +
-                            2 * (1 - tParam) * tParam * p1 + Mathf.Pow(tParam, 2) * p2;
-
-                        transform.position = MahasiswaPosition;
-
+                        
                         if (curPosMhs == 4 || curPosMhs == 8)
                         {
                             if (curPosMhs == 4)
@@ -725,12 +710,18 @@ public class MahasiswaMovement : MonoBehaviour
                             go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
                         }
 
+                        tParam += Time.deltaTime * speedModifier;
+
+                        MahasiswaPosition = Mathf.Pow(1 - tParam, 2) * p0 +
+                            2 * (1 - tParam) * tParam * p1 + Mathf.Pow(tParam, 2) * p2;
+
+                        transform.position = MahasiswaPosition;
+
                         yield return new WaitForEndOfFrame();
 
                     }
-                    go_mhs.GetComponent<Animator>().Play("MC_IdleNormal");
+                    go_mhs.GetComponent<Animator>().Play("MC_IdleFlat");
                     GameInstance.onLand?.Invoke();
-                    //go_shadow.SetActive(true);
 
                     yield return new WaitForSeconds(0.375f);
                     //speedModifier = 1f;
@@ -827,12 +818,6 @@ public class MahasiswaMovement : MonoBehaviour
                    
                     while (tParam < 1)
                     {
-                        tParam += Time.deltaTime * speedModifier;
-
-                        MahasiswaPosition = Mathf.Pow(1 - tParam, 2) * p0 +
-                            2 * (1 - tParam) * tParam * p1 + Mathf.Pow(tParam, 2) * p2;
-
-                        transform.position = MahasiswaPosition;
 
                         if (curPosMhs == 3 || curPosMhs == 7)
                         {
@@ -843,7 +828,13 @@ public class MahasiswaMovement : MonoBehaviour
                             go_mhs.transform.localScale = Vector2.Lerp(go_mhs.transform.localScale, targetScale, tParam / duration);
                         }
 
+                        tParam += Time.deltaTime * speedModifier;
 
+                        MahasiswaPosition = Mathf.Pow(1 - tParam, 2) * p0 +
+                            2 * (1 - tParam) * tParam * p1 + Mathf.Pow(tParam, 2) * p2;
+
+                        transform.position = MahasiswaPosition;
+                                                
                         yield return new WaitForEndOfFrame();
 
                     }

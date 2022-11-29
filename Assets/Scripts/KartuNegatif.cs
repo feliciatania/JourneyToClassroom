@@ -13,7 +13,7 @@ public class KartuNegatif : MonoBehaviour
     int x;
     int majuOrMundur = 0;
 
-    void Start()
+    void Awake()
     {
         //kartuNegatif[0] = "Kamu tidak memperhatikan dosen pada saat kelas";
         //kartuNegatif[1] = "Waduh...Kamu ketiduran jadi tidak masuk kelas";
@@ -25,11 +25,11 @@ public class KartuNegatif : MonoBehaviour
         //kartuNegatifPerintah[2] = "MUNDUR 2 KOTAK";
         //kartuNegatifPerintah[3] = "MUNDUR 3 KOTAK";
 
-        GameInstance.onLoadKartuNegatif += onKartuNegatif;
+        //GameInstance.onKartuNegatif += onKartuNegatif;
         GameInstance.onKartuOK += onButtonOK;
     }
 
-    public void onKartuNegatif(int curPosMhs)
+    public void onKartuNegatif()
     {
         x = UnityEngine.Random.Range(0, 3);
         if (x == 0)
@@ -51,7 +51,7 @@ public class KartuNegatif : MonoBehaviour
             majuOrMundur = -3;
         }
 
-        majuOrMundur = -3;
+        //majuOrMundur = -3;
     }
 
     public void onButtonOK(bool b)

@@ -25,10 +25,10 @@ public class GameInstance : MonoBehaviour
     public static Action onLand { get; set; }
     public static Action <int> onMahasiswaMove { get; set; }
     public static Action <int> onMahasiswaMoveOnKartu { get; set; }
-    public static Action <int> onKartuPositif { get; set; }
-    public static Action <int> onKartuNegatif { get; set; }
-    public static Action <int> onLoadKartuPositif { get; set; }
-    public static Action <int> onLoadKartuNegatif { get; set; }
+    public static Action onKartuPositif { get; set; }
+    public static Action onKartuNegatif { get; set; }
+    public static Action onLoadKartuPositif { get; set; }
+    public static Action onLoadKartuNegatif { get; set; }
     public static Action <bool> onKartuOK { get; set; }
     public static Action <bool> onDosenMarah { get; set; }
     public static Action onGiliranDosen { get; set; }

@@ -14,7 +14,7 @@ public class KartuPositif : MonoBehaviour
     int x;
     int majuOrMundur = 0;
 
-    void Start()
+    void Awake()
     {
         //kartuPositif[0] = "Kamu selalu hadir di kelas dan tidak pernah membolos";
         //kartuPositif[1] = "Wah...Kamu mendapat nilai 100 pada UTS dan UAS";
@@ -24,10 +24,10 @@ public class KartuPositif : MonoBehaviour
         //kartuPositifPerintah[1] = "MAJU 2 KOTAK";
         //kartuPositifPerintah[2] = "MAJU 3 KOTAK";
 
-        GameInstance.onKartuPositif += OnKartuPositif;
+        //GameInstance.onKartuPositif += OnKartuPositif;
         GameInstance.onKartuOK += onButtonOK;
     }
-    public void OnKartuPositif(int curPosMhs)
+    public void OnKartuPositif()
     {
         x = UnityEngine.Random.Range(0, 2);
         if (x == 0)
