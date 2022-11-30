@@ -5232,7 +5232,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 508960504}
-  - component: {fileID: 508960503}
   - component: {fileID: 508960506}
   - component: {fileID: 508960505}
   - component: {fileID: 508960507}
@@ -5243,30 +5242,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &508960503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508960501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6eae52aaed884d4d9c9ad0aabdfa8c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  kartuNegatif:
-  - Kamu tidak memperhatikan dosen pada saat kelas
-  - Waduh...Kamu ketiduran jadi tidak masuk kelas
-  - Waduh...Kamu sibuk bermain game jadi lupa ngerjain tugas
-  - Astaga...Kamu lupa belajar padahal hari ini ada tes
-  kartuNegatifPerintah:
-  - KAMU TIDAK MENDAPAT GILIRAN LEMPAR DADU
-  - MUNDUR 1 KOTAK
-  - MUNDUR 2 KOTAK
-  - MUNDUR 3 KOTAK
-  kalNegTxt: {fileID: 1221967465}
-  kalPerintahNegTxt: {fileID: 1195786338}
 --- !u!224 &508960504
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6424,6 +6399,8 @@ GameObject:
   - component: {fileID: 670594049}
   - component: {fileID: 670594057}
   - component: {fileID: 670594056}
+  - component: {fileID: 670594059}
+  - component: {fileID: 670594058}
   - component: {fileID: 670594052}
   - component: {fileID: 670594051}
   m_Layer: 0
@@ -6555,6 +6532,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   go_pintuMerah: {fileID: 1302850755}
   mask: {fileID: 1648437321}
+--- !u!114 &670594058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670594046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6eae52aaed884d4d9c9ad0aabdfa8c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kartuNegatif:
+  - Kamu tidak memperhatikan dosen pada saat kelas
+  - Waduh...Kamu ketiduran jadi tidak masuk kelas
+  - Waduh...Kamu sibuk bermain game jadi lupa ngerjain tugas
+  - Astaga...Kamu lupa belajar padahal hari ini ada tes
+  kartuNegatifPerintah:
+  - KAMU TIDAK MENDAPAT GILIRAN LEMPAR DADU
+  - MUNDUR 1 KOTAK
+  - MUNDUR 2 KOTAK
+  - MUNDUR 3 KOTAK
+  kalNegTxt: {fileID: 1221967465}
+  kalPerintahNegTxt: {fileID: 1195786338}
+--- !u!114 &670594059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670594046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5748a257c95e1d4da0ed41f87acc61b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kartuPositif:
+  - Kamu selalu hadir di kelas dan tidak pernah membolos!
+  - Wah...Kamu mendapat nilai 100 pada UTS dan UAS!
+  - Wow...Semester ini kamu rajin belajar jadi dapat IPS diatas 3.5!
+  kartuPositifPerintah:
+  - MAJU 1 KOTAK
+  - MAJU 2 KOTAK
+  - MAJU 3  KOTAK
+  kalPosTxt: {fileID: 2112856303}
+  kalPerintahPosTxt: {fileID: 1738629830}
 --- !u!1 &716456061
 GameObject:
   m_ObjectHideFlags: 0
@@ -9698,7 +9721,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1091439396}
-  - component: {fileID: 1091439395}
   - component: {fileID: 1091439398}
   - component: {fileID: 1091439397}
   - component: {fileID: 1091439399}
@@ -9709,28 +9731,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1091439395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091439393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5748a257c95e1d4da0ed41f87acc61b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  kartuPositif:
-  - Kamu selalu hadir di kelas dan tidak pernah membolos!
-  - Wah...Kamu mendapat nilai 100 pada UTS dan UAS!
-  - Wow...Semester ini kamu rajin belajar jadi dapat IPS diatas 3.5!
-  kartuPositifPerintah:
-  - MAJU 1 KOTAK
-  - MAJU 2 KOTAK
-  - MAJU 3  KOTAK
-  kalPosTxt: {fileID: 2112856303}
-  kalPerintahPosTxt: {fileID: 1738629830}
 --- !u!224 &1091439396
 RectTransform:
   m_ObjectHideFlags: 0

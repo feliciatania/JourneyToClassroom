@@ -56,6 +56,8 @@ public class LemparDadu : MonoBehaviour
         GameInstance.onDiceRoll?.Invoke(false);
 
         angkaDadu = randomDiceSide + 1;
+
+        DiceImg.sprite = diceSidesSprites[1];
         angkaDadu = 2;
 
         go_Dadu.GetComponent<Animator>().Play("StopDadu");
