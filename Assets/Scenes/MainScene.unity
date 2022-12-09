@@ -1598,8 +1598,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.1885986, y: 0.090797424}
-  m_SizeDelta: {x: -15.4054, y: -12.8597}
+  m_AnchoredPosition: {x: 0.00018310547, y: -0.0005874634}
+  m_SizeDelta: {x: -54.6, y: -12.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &142956518
 MonoBehaviour:
@@ -7354,8 +7354,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.5598145, y: 0}
-  m_SizeDelta: {x: -15.5981, y: -12.4787}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -42.000008, y: -12.48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &778703703
 MonoBehaviour:
@@ -12802,8 +12802,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.455, y: 2.4478}
-  m_SizeDelta: {x: 405.2621, y: 232.3697}
+  m_AnchoredPosition: {x: -0.0015811, y: 6}
+  m_SizeDelta: {x: 405.26, y: 201.51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1396467007
 MonoBehaviour:
@@ -12825,9 +12825,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua Integer varius ante id urna
-    aliquam rhoncus ?
+  m_text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b152bfbeb9189c4a83941301d758059, type: 2}
   m_sharedMaterial: {fileID: 8361838891200202506, guid: 3b152bfbeb9189c4a83941301d758059, type: 2}
@@ -12862,9 +12861,9 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: -3
+  m_characterSpacing: -1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13684,7 +13683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1488478694
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17892,9 +17891,9 @@ MonoBehaviour:
     CorrectAnswers: 0
   - Question: Ciri-ciri dari Niche Marketing, kecuali ?
     Answers:
-    - few or no significant competitors
-    - low price
-    - focus on subgroups seeking special combination of benefits
+    - Few or no significant competitors
+    - Low price
+    - Focus on subgroups seeking special benefits
     CorrectAnswers: 1
   - Question: Langkah 'Identify bases for segmenting the market' termasuk dalam ?
     Answers:
@@ -20673,7 +20672,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2110992998}
-  - component: {fileID: 2110993002}
   - component: {fileID: 2110993001}
   - component: {fileID: 2110993000}
   m_Layer: 0
@@ -20742,28 +20740,6 @@ Canvas:
   m_SortingLayerID: 1760927465
   m_SortingOrder: 3
   m_TargetDisplay: 0
---- !u!114 &2110993002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2110992997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5748a257c95e1d4da0ed41f87acc61b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  kartuPositif:
-  - Kamu selalu hadir di kelas dan tidak pernah membolos!
-  - Wah...Kamu mendapat nilai 100 pada UTS dan UAS!
-  - Wow...Semester ini kamu rajin belajar jadi dapat IPS diatas 3.5!
-  kartuPositifPerintah:
-  - MAJU 1 KOTAK
-  - MAJU 2 KOTAK
-  - MAJU 3  KOTAK
-  kalPosTxt: {fileID: 0}
-  kalPerintahPosTxt: {fileID: 0}
 --- !u!1 &2112856301
 GameObject:
   m_ObjectHideFlags: 0
@@ -20934,8 +20910,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000091552734, y: 0.02999878}
-  m_SizeDelta: {x: -16.3137, y: -12.6284}
+  m_AnchoredPosition: {x: 0.00016784668, y: 0.00012207031}
+  m_SizeDelta: {x: -53.01, y: -12.63}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2133233982
 MonoBehaviour:
